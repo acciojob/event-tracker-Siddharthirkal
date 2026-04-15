@@ -106,7 +106,7 @@ function CalendarComponent({ filter, setFilter }) {
             <div className="topbar">
                 <div>
                     <button
-                        className="btn"
+                        className="nav-btn"
                         onClick={() =>
                             setCurrentDate((prev) => moment(prev).subtract(1, "month").toDate())
                         }
@@ -117,7 +117,7 @@ function CalendarComponent({ filter, setFilter }) {
 
                 <div>
                     <button
-                        className="btn"
+                        className="nav-btn"
                         onClick={() =>
                             setCurrentDate((prev) => moment(prev).add(1, "month").toDate())
                         }
