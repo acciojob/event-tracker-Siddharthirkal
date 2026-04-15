@@ -12,7 +12,7 @@ function CalendarComponent({ filter, setFilter }) {
   const [selectedSlot, setSelectedSlot] = useState(null);
   const [selectedEvent, setSelectedEvent] = useState(null);
 
-  const [modalType, setModalType] = useState(null); // create | details | edit
+  const [modalType, setModalType] = useState(null);
   const [title, setTitle] = useState("");
   const [location, setLocation] = useState("");
 
@@ -103,39 +103,54 @@ function CalendarComponent({ filter, setFilter }) {
 
   return (
     <div className="calendar-wrapper">
-      <div className="toolbar">
-        <div className="toolbar-left">
+      <div className="topbar">
+        <div>
           <button
             className="btn"
-            onClick={() => setCurrentDate((prev) => moment(prev).subtract(1, "month").toDate())}
+            onClick={() =>
+              setCurrentDate((prev) => moment(prev).subtract(1, "month").toDate())
+            }
           >
             ← Prev
           </button>
+        </div>
+
+        <div>
           <button
             className="btn"
-            onClick={() => setCurrentDate((prev) => moment(prev).add(1, "month").toDate())}
+            onClick={() =>
+              setCurrentDate((prev) => moment(prev).add(1, "month").toDate())
+            }
           >
             Next →
           </button>
         </div>
 
-        <h2 className="toolbar-title">{moment(currentDate).format("MMMM YYYY")}</h2>
+        <div className="month-title">{moment(currentDate).format("MMMM YYYY")}</div>
 
-        <div className="toolbar-right">
+        <div>
           <button
-            className={`btn ${filter === "all" ? "active all-btn" : ""}`}
+            className={`btn ${filter === "all" ? "active all-btn" : "all-btn"}`}
             onClick={() => setFilter("all")}
           >
             All
           </button>
+        </div>
+
+        <div>
           <button
-            className={`btn ${filter === "past" ? "active past-btn" : ""}`}
+            className={`btn ${filter === "past" ? "active past-btn" : "past-btn"}`}
             onClick={() => setFilter("past")}
           >
             Past
           </button>
+        </div>
+
+        <div>
           <button
-            className={`btn ${filter === "upcoming" ? "active upcoming-btn" : ""}`}
+            className={`btn ${
+              filter === "upcoming" ? "active upcoming-btn" : "upcoming-btn"
+            }`}
             onClick={() => setFilter("upcoming")}
           >
             Upcoming
@@ -176,22 +191,7 @@ function CalendarComponent({ filter, setFilter }) {
             </div>
 
             <div className="modal-body">
-              {modalType === "create" && (
-                <>
-                  <input
-                    placeholder="Event Title"
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
-                  />
-                  <input
-                    placeholder="Event Location"
-                    value={location}
-                    onChange={(e) => setLocation(e.target.value)}
-                  />
-                </>
-              )}
-
-              {modalType === "edit" && (
+              {(modalType === "create" || modalType === "edit") && (
                 <>
                   <input
                     placeholder="Event Title"

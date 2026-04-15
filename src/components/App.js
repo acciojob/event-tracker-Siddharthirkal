@@ -5,11 +5,7 @@ import "./../styles/App.css";
 function App() {
   const [filter, setFilter] = useState("all");
 
-  return (
-    <div className="app">
-      <CalendarComponent filter={filter} setFilter={setFilter} />
-    </div>
-  );
+  return <CalendarComponent filter={filter} setFilter={setFilter} />;
 }
 
 export default App;
