@@ -5,44 +5,6 @@ import "react-big-calendar/lib/css/react-big-calendar.css";
 
 const localizer = momentLocalizer(moment);
 
-function Toolbar({ label, onNavigate, filter, setFilter }) {
-  return (
-    <div className="toolbar">
-      <div className="toolbar-left">
-        <button className="btn" onClick={() => onNavigate("PREV")}>
-          ← Prev
-        </button>
-        <button className="btn" onClick={() => onNavigate("NEXT")}>
-          Next →
-        </button>
-      </div>
-
-      <h2 className="toolbar-title">{label}</h2>
-
-      <div className="toolbar-right">
-        <button
-          className={`btn ${filter === "all" ? "active all-btn" : ""}`}
-          onClick={() => setFilter("all")}
-        >
-          All
-        </button>
-        <button
-          className={`btn ${filter === "past" ? "active past-btn" : ""}`}
-          onClick={() => setFilter("past")}
-        >
-          Past
-        </button>
-        <button
-          className={`btn ${filter === "upcoming" ? "active upcoming-btn" : ""}`}
-          onClick={() => setFilter("upcoming")}
-        >
-          Upcoming
-        </button>
-      </div>
-    </div>
-  );
-}
-
 function CalendarComponent({ filter, setFilter }) {
   const [events, setEvents] = useState([]);
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -92,7 +54,7 @@ function CalendarComponent({ filter, setFilter }) {
   };
 
   const addEvent = () => {
-    if (!title.trim()) return;
+    if (!title.trim() || !selectedSlot) return;
 
     const newEvent = {
       id: Date.now(),
@@ -112,11 +74,7 @@ function CalendarComponent({ filter, setFilter }) {
     setEvents((prev) =>
       prev.map((event) =>
         event.id === selectedEvent.id
-          ? {
-              ...event,
-              title: title.trim(),
-              location: location.trim(),
-            }
+          ? { ...event, title: title.trim(), location: location.trim() }
           : event
       )
     );
@@ -145,6 +103,46 @@ function CalendarComponent({ filter, setFilter }) {
 
   return (
     <div className="calendar-wrapper">
+      <div className="toolbar">
+        <div className="toolbar-left">
+          <button
+            className="btn"
+            onClick={() => setCurrentDate((prev) => moment(prev).subtract(1, "month").toDate())}
+          >
+            ← Prev
+          </button>
+          <button
+            className="btn"
+            onClick={() => setCurrentDate((prev) => moment(prev).add(1, "month").toDate())}
+          >
+            Next →
+          </button>
+        </div>
+
+        <h2 className="toolbar-title">{moment(currentDate).format("MMMM YYYY")}</h2>
+
+        <div className="toolbar-right">
+          <button
+            className={`btn ${filter === "all" ? "active all-btn" : ""}`}
+            onClick={() => setFilter("all")}
+          >
+            All
+          </button>
+          <button
+            className={`btn ${filter === "past" ? "active past-btn" : ""}`}
+            onClick={() => setFilter("past")}
+          >
+            Past
+          </button>
+          <button
+            className={`btn ${filter === "upcoming" ? "active upcoming-btn" : ""}`}
+            onClick={() => setFilter("upcoming")}
+          >
+            Upcoming
+          </button>
+        </div>
+      </div>
+
       <Calendar
         selectable
         localizer={localizer}
@@ -153,21 +151,13 @@ function CalendarComponent({ filter, setFilter }) {
         endAccessor="end"
         views={["month"]}
         view="month"
+        toolbar={false}
         popup={false}
         date={currentDate}
         onNavigate={(date) => setCurrentDate(date)}
         onSelectSlot={openCreateModal}
         onSelectEvent={openDetailsModal}
         eventPropGetter={eventStyleGetter}
-        components={{
-          toolbar: (props) => (
-            <Toolbar
-              {...props}
-              filter={filter}
-              setFilter={setFilter}
-            />
-          ),
-        }}
         style={{ height: "85vh" }}
       />
 
@@ -223,8 +213,7 @@ function CalendarComponent({ filter, setFilter }) {
                     {moment(selectedEvent.start).format("MMMM DD, YYYY")}
                   </p>
                   <p>
-                    <strong>Location:</strong>{" "}
-                    {selectedEvent.location || "No location"}
+                    <strong>Location:</strong> {selectedEvent.location || "No location"}
                   </p>
                 </div>
               )}
