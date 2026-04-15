@@ -1,13 +1,15 @@
+import React, { useState } from "react";
+import CalendarComponent from "./CalendarComponent";
+import "./../styles/App.css";
 
-import React from "react";
-import './../styles/App.css';
+function App() {
+  const [filter, setFilter] = useState("all");
 
-const App = () => {
   return (
-    <div>
-        {/* Do not remove the main div */}
+    <div className="app">
+      <CalendarComponent filter={filter} setFilter={setFilter} />
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
